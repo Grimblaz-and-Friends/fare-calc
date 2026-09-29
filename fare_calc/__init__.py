@@ -1,3 +1,3 @@
-from .fares import Rider, fare_cents
+from .fares import DAILY_CAP_CENTS, Rider, day_charges, fare_cents
 
-__all__ = ["Rider", "fare_cents"]
+__all__ = ["DAILY_CAP_CENTS", "Rider", "day_charges", "fare_cents"]

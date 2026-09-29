@@ -5,6 +5,7 @@ BASE_CENTS = 250
 PER_ZONE_CENTS = 75
 PEAK_SURCHARGE_CENTS = 50
 DISCOUNTS = {"adult": 0.0, "senior": 0.5, "student": 0.3, "child": 1.0}
+DAILY_CAP_CENTS = 800
 
 
 @dataclass(frozen=True)
@@ -30,3 +31,19 @@ def fare_cents(rider: Rider, zones: int, hour: int) -> int:
     if is_peak(hour):
         gross += PEAK_SURCHARGE_CENTS
     return round(gross * (1 - DISCOUNTS[rider.category]))
+
+
+def day_charges(rider: Rider, trips: list[tuple[int, int]]) -> list[int]:
+    """Charge a day's trips, given as ``(zones, hour)`` in travel order.
+
+    Riders never pay more than ``DAILY_CAP_CENTS`` in one day: the trip that
+    reaches the cap is charged only what remains of it, and later trips that
+    day are free.
+    """
+    charges = []
+    spent = 0
+    for zones, hour in trips:
+        fare = min(fare_cents(rider, zones, hour), DAILY_CAP_CENTS - spent)
+        spent += fare
+        charges.append(fare)
+    return charges
