@@ -33,7 +33,10 @@ class DailyCapTests(unittest.TestCase):
 
     def test_trips_after_cap_are_free(self):
         trips = [(3, 8), (3, 17), (1, 20), (1, 21)]
-        self.assertEqual(day_charges(Rider("adult"), trips), [450, 0, 250, 0])
+        self.assertEqual(day_charges(Rider("adult"), trips), [450, 350, 0, 0])
+
+    def test_trip_dearer_than_cap_is_charged_the_cap(self):
+        self.assertEqual(day_charges(Rider("adult"), [(9, 8), (1, 12)]), [800, 0])
 
 
 if __name__ == "__main__":

@@ -36,15 +36,14 @@ def fare_cents(rider: Rider, zones: int, hour: int) -> int:
 def day_charges(rider: Rider, trips: list[tuple[int, int]]) -> list[int]:
     """Charge a day's trips, given as ``(zones, hour)`` in travel order.
 
-    Riders never pay more than ``DAILY_CAP_CENTS`` in one day: once the cap is
-    reached, later trips that day are free.
+    Riders never pay more than ``DAILY_CAP_CENTS`` in one day: the trip that
+    reaches the cap is charged only what remains of it, and later trips that
+    day are free.
     """
     charges = []
     spent = 0
     for zones, hour in trips:
-        fare = fare_cents(rider, zones, hour)
-        if spent + fare > DAILY_CAP_CENTS:
-            fare = 0
+        fare = min(fare_cents(rider, zones, hour), DAILY_CAP_CENTS - spent)
         spent += fare
         charges.append(fare)
     return charges
