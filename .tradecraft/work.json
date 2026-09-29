@@ -1,9 +1,7 @@
 {
   "schema_version": 1,
   "product_repositories": [],
-  "connected_reviewers": [
-    "github-actions[bot]"
-  ],
+  "connected_reviewers": [],
   "marker_producers": [
     "Grimblaz"
   ],
