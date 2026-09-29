@@ -1,6 +1,6 @@
 import unittest
 
-from fare_calc import Rider, fare_cents
+from fare_calc import Rider, day_charges, fare_cents
 
 
 class FareTests(unittest.TestCase):
@@ -25,6 +25,15 @@ class FareTests(unittest.TestCase):
     def test_rejects_zero_zones(self):
         with self.assertRaises(ValueError):
             fare_cents(Rider("adult"), 0, 12)
+
+
+class DailyCapTests(unittest.TestCase):
+    def test_under_cap_charges_each_trip(self):
+        self.assertEqual(day_charges(Rider("adult"), [(1, 12), (1, 13)]), [250, 250])
+
+    def test_trips_after_cap_are_free(self):
+        trips = [(3, 8), (3, 17), (1, 20), (1, 21)]
+        self.assertEqual(day_charges(Rider("adult"), trips), [450, 0, 250, 0])
 
 
 if __name__ == "__main__":
